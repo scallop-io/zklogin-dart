@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:sui/sui.dart';
-import 'package:zklogin/utils.dart';
+import 'package:sui_dart/sui.dart';
+import 'package:zklogin_dart/utils.dart';
 
 const MAX_HEADER_LEN_B64 = 248;
 const MAX_PADDED_UNSIGNED_JWT_LEN = 64 * 25;
@@ -34,9 +34,7 @@ String jwtToAddress(String jwt, BigInt userSalt) {
   lengthChecks(jwt);
 
   final decodedJWT = decodeJwt(jwt);
-  if (decodedJWT['sub'] == null ||
-      decodedJWT['iss'] == null ||
-      decodedJWT['aud'] == null) {
+  if (decodedJWT['sub'] == null || decodedJWT['iss'] == null || decodedJWT['aud'] == null) {
     throw Exception('Missing jwt data');
   }
 

@@ -1,17 +1,13 @@
-
 import 'dart:convert';
+import 'package:test/test.dart';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:sui/builder/transaction.dart';
-import 'package:sui/sui.dart';
+import 'package:sui_dart/sui.dart';
 
 import 'package:dio/dio.dart';
-import 'package:zklogin/zklogin.dart';
+import 'package:zklogin_dart/zklogin.dart';
 
 void main() {
-  
   test('dummy zkLogin transaction', () async {
-
     const maxEpoch = 140;
 
     final randomness = generateRandomness();
@@ -27,7 +23,8 @@ void main() {
 
     final address = jwtToAddress(jwtStr, userSalt);
 
-    final extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(ephemeralKeypair.getPublicKey());
+    final extendedEphemeralPublicKey =
+        getExtendedEphemeralPublicKey(ephemeralKeypair.getPublicKey());
 
     final body = {
       "jwt": jwtStr,
@@ -44,24 +41,21 @@ void main() {
     txb.setSenderIfNotSet(address);
     final coin = txb.splitCoins(txb.gas, [txb.pureInt(22222)]);
     txb.transferObjects([coin], txb.pureAddress(address));
-    
+
     final client = SuiClient(SuiUrls.devnet);
     final sign = await txb.sign(SignOptions(signer: ephemeralKeypair, client: client));
 
-    final addressSeed = genAddressSeed(userSalt, 'sub', jwt['sub'].toString(), jwt['aud'].toString());
+    final addressSeed =
+        genAddressSeed(userSalt, 'sub', jwt['sub'].toString(), jwt['aud'].toString());
     zkProof["addressSeed"] = addressSeed.toString();
 
     final zksign = getZkLoginSignature(ZkLoginSignature(
         inputs: ZkLoginSignatureInputs.fromJson(zkProof),
         maxEpoch: maxEpoch,
-        userSignature: base64Decode(sign.signature)
-      )
-    );
+        userSignature: base64Decode(sign.signature)));
 
-    final resp = await client.executeTransactionBlock(sign.bytes, [zksign], options: SuiTransactionBlockResponseOptions(showEffects: true));
+    final resp = await client.executeTransactionBlock(sign.bytes, [zksign],
+        options: SuiTransactionBlockResponseOptions(showEffects: true));
     expect(resp.effects?.status.status, ExecutionStatusType.success);
-
   });
-
-
 }

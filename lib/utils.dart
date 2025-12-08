@@ -1,5 +1,5 @@
-import "package:sui/sui.dart";
-import "package:sui/utils/hex.dart";
+import "package:sui_dart/sui.dart";
+import "package:sui_dart/utils/hex.dart";
 
 import "poseidon.dart";
 
@@ -21,8 +21,7 @@ List<List<dynamic>> chunkArray<T>(List<T> array, int chunkSize) {
   final revArray = array.reversed;
   List<List<dynamic>> chunks = List.generate(
     (revArray.length / chunkSize).ceil(),
-    (i) =>
-        List.from(revArray.skip(i * chunkSize).take(chunkSize).toList().reversed),
+    (i) => List.from(revArray.skip(i * chunkSize).take(chunkSize).toList().reversed),
   ).toList();
   return chunks.reversed.toList();
 }

@@ -1,15 +1,20 @@
 ## 0.0.1
 
-* Initial version, created by Mofa Labs.
+- Initial version, created by Mofa Labs.
 
 ## 0.0.2
 
-* Add zkLogin Test
+- Add zkLogin Test
 
 ## 0.0.3
 
-* Fix getExtendedEphemeralPublicKey
+- Fix getExtendedEphemeralPublicKey
 
 ## 0.0.4
 
-* Upgrade Sui
+- Upgrade Sui
+
+## 0.0.5
+
+- Refactor change flutter_test to test for more platform agnostic
+- Upgrade Sui lib
