@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:test/test.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:sui_dart/sui.dart';
 import 'package:zklogin_dart/zklogin.dart';
