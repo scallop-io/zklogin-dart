@@ -1,0 +1,8 @@
+# Test configuration.
+# https://pub.dev/packages/test#configuring-test-runs
+tags:
+  integration:
+    # End-to-end tests that need a live Sui zkLogin prover and a funded devnet
+    # account. Skipped by default so `dart test` passes offline.
+    # Run them with: dart test --tags integration --run-skipped
+    skip: "Requires a live Sui zkLogin prover and a funded devnet account."

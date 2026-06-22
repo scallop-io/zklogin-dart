@@ -1,8 +1,15 @@
-include: package:flutter_lints/flutter.yaml
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+# Lint rules for this pure-Dart package.
+# See https://dart.dev/guides/language/analysis-options
+include: package:lints/recommended.yaml
 
 analyzer:
-  errors:
-    invalid_annotation_target: ignore
+  exclude:
+    # Vendored third-party Poseidon hash tables (kept verbatim from upstream).
+    - lib/src/poseidon/**
+
+linter:
+  rules:
+    # The exported MAX_*/NONCE_LENGTH/PACK_WIDTH constants intentionally mirror
+    # the canonical Sui/Mysten zkLogin spec names; renaming them to
+    # lowerCamelCase would break API compatibility for existing consumers.
+    constant_identifier_names: false
