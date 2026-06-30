@@ -59,7 +59,7 @@ void lengthChecks(String jwt) {
 /// `sub`, `iss`, and `aud` claims, and its `aud` claim must be a single string
 /// (array audiences are not supported by zkLogin). Throws a [FormatException]
 /// if the token is malformed or missing/invalid required claims.
-String jwtToAddress(String jwt, BigInt userSalt) {
+String jwtToAddress(String jwt, BigInt userSalt, {bool legacyAddress = false}) {
   lengthChecks(jwt);
 
   final decodedJWT = decodeJwt(jwt);
@@ -89,6 +89,7 @@ String jwtToAddress(String jwt, BigInt userSalt) {
     claimValue: decodedJWT['sub'] as String,
     aud: decodedJWT['aud'] as String,
     iss: decodedJWT['iss'] as String,
+    legacyAddress: legacyAddress,
   );
 }
 
@@ -103,10 +104,12 @@ String computeZkLoginAddress({
   required BigInt userSalt,
   required String iss,
   required String aud,
+  bool legacyAddress = false,
 }) {
   return computeZkLoginAddressFromSeed(
     genAddressSeed(userSalt, claimName, claimValue, aud),
     iss,
+    legacyAddress: legacyAddress,
   );
 }
 

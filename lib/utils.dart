@@ -1,6 +1,3 @@
-import 'package:sui_dart/sui.dart';
-import 'package:sui_dart/utils/hex.dart';
-
 import 'poseidon.dart';
 
 /// Maximum length of an OAuth key-claim name supported by zkLogin.
@@ -14,12 +11,6 @@ const MAX_AUD_VALUE_LENGTH = 145;
 
 /// Bit width used when packing ASCII strings into field elements.
 const PACK_WIDTH = 248;
-
-/// Returns the extended ephemeral public key for [publicKey] as a decimal
-/// string, the form expected by the Sui zkLogin prover.
-String getExtendedEphemeralPublicKey(PublicKey publicKey) {
-  return BigInt.parse(Hex.encode(publicKey.toSuiBytes()), radix: 16).toString();
-}
 
 /// Splits [array] into chunks of size [chunkSize]. If the array is not evenly
 /// divisible by [chunkSize], the first chunk will be smaller than [chunkSize].
@@ -62,6 +53,22 @@ BigInt hashASCIIStrToField(String str, int maxSize) {
   return poseidonHash(packed);
 }
 
+/// Rejects a claim whose decoded form contains a JSON escape (`"`, `\`, or a
+/// control char): the circuit hashes raw JWT bytes, so an escaped value would
+/// derive a different address.
+void _assertNoJsonEscape(String value, String label) {
+  for (var i = 0; i < value.length; i++) {
+    final c = value.codeUnitAt(i);
+    if (c < 0x20 || c == 0x22 || c == 0x5c) {
+      throw ArgumentError(
+        'zkLogin $label contains a JSON-escaped character (code $c); the '
+        'circuit hashes raw JWT bytes, so claim values with escapes are not '
+        'supported',
+      );
+    }
+  }
+}
+
 /// Generates the zkLogin address seed from the user's [salt], the OAuth claim
 /// identified by [name]/[value], and the token's [aud].
 BigInt genAddressSeed(
@@ -73,6 +80,9 @@ BigInt genAddressSeed(
   int maxValueLength = MAX_KEY_CLAIM_VALUE_LENGTH,
   int maxAudLength = MAX_AUD_VALUE_LENGTH,
 }) {
+  _assertNoJsonEscape(name, 'key claim name');
+  _assertNoJsonEscape(value, 'key claim value');
+  _assertNoJsonEscape(aud, 'aud');
   return poseidonHash([
     hashASCIIStrToField(name, maxNameLength),
     hashASCIIStrToField(value, maxValueLength),

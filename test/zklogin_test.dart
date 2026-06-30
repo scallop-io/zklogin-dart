@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:test/test.dart';
 
 import 'package:sui_dart/sui.dart';
+import 'package:sui_dart/grpc/client.dart';
+import 'package:sui_dart/grpc/grpc_resolution_client.dart';
 
 import 'package:dio/dio.dart';
 import 'package:zklogin_dart/zklogin.dart';
@@ -66,9 +68,14 @@ void main() {
     final coin = txb.splitCoins(txb.gas, [txb.pureInt(22222)]);
     txb.transferObjects([coin], txb.pureAddress(address));
 
-    final client = SuiClient(SuiUrls.devnet);
+    final client = SuiGrpcClient(
+      SuiGrpcClientOptions(baseUrl: 'fullnode.devnet.sui.io', port: 443),
+    );
     final sign = await txb.sign(
-      SignOptions(signer: ephemeralKeypair, client: client),
+      SignOptions(
+        signer: ephemeralKeypair,
+        resolutionClient: GrpcResolutionClient(client),
+      ),
     );
 
     final addressSeed = genAddressSeed(
@@ -87,9 +94,11 @@ void main() {
       ),
     );
 
-    final resp = await client.executeTransactionBlock(sign.bytes, [
-      zksign,
-    ], options: SuiTransactionBlockResponseOptions(showEffects: true));
-    expect(resp.effects?.status.status, ExecutionStatusType.success);
+    final resp = await client.executeTransaction(
+      base64Decode(sign.bytes),
+      [zksign],
+      include: const TransactionIncludeOptions(effects: true),
+    );
+    expect(resp.effects?.status?.success, true);
   });
 }

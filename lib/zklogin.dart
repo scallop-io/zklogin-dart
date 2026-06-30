@@ -5,6 +5,8 @@
 /// needed for a Sui zkLogin signature.
 library;
 
+export 'package:sui_dart/sui.dart' show getExtendedEphemeralPublicKey;
+
 export 'address.dart';
 export 'nonce.dart';
 export 'poseidon.dart';
