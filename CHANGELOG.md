@@ -1,3 +1,12 @@
+## 0.2.0
+
+### Breaking
+
+- Require `sui_dart` `^0.9.0`. Its transport refactor removed the JSON-RPC
+  surface and reshaped the transaction-build options (`SignOptions.client`
+  instead of `resolutionClient`), so consumers on `sui_dart` 0.8.x must
+  migrate. zkLogin's own API is unchanged.
+
 ## 0.1.0
 
 Synced to `f898c13`.

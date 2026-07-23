@@ -6,8 +6,7 @@ import 'dart:convert';
 import 'package:test/test.dart';
 
 import 'package:sui_dart/sui.dart';
-import 'package:sui_dart/grpc/client.dart';
-import 'package:sui_dart/grpc/grpc_resolution_client.dart';
+import 'package:sui_dart/grpc/sui_grpc_client.dart';
 
 import 'package:dio/dio.dart';
 import 'package:zklogin_dart/zklogin.dart';
@@ -72,10 +71,7 @@ void main() {
       SuiGrpcClientOptions(baseUrl: 'fullnode.devnet.sui.io', port: 443),
     );
     final sign = await txb.sign(
-      SignOptions(
-        signer: ephemeralKeypair,
-        resolutionClient: GrpcResolutionClient(client),
-      ),
+      SignOptions(signer: ephemeralKeypair, client: client.core),
     );
 
     final addressSeed = genAddressSeed(
