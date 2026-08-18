@@ -1,3 +1,9 @@
+## 0.3.0
+
+### Breaking
+
+- Require `sui_dart` `^0.10.0`. zkLogin's own API is unchanged.
+
 ## 0.2.0
 
 ### Breaking

@@ -90,11 +90,9 @@ void main() {
       ),
     );
 
-    final resp = await client.executeTransaction(
-      base64Decode(sign.bytes),
-      [zksign],
-      include: const TransactionIncludeOptions(effects: true),
-    );
+    final resp = await client.executeTransaction(base64Decode(sign.bytes), [
+      zksign,
+    ], include: const TransactionIncludeOptions(effects: true));
     expect(resp.effects?.status?.success, true);
   });
 }
