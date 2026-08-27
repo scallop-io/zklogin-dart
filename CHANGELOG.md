@@ -1,3 +1,9 @@
+## 0.4.0
+
+### Breaking
+
+- Require `sui_dart` `^0.11.0`.
+
 ## 0.3.0
 
 ### Breaking
