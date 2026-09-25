@@ -28,7 +28,7 @@ Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  zklogin_dart: ^0.3.0
+  zklogin_dart: ^0.5.0
 ```
 
 ## Usage
